@@ -1,3 +1,13 @@
 /* .height-custom{
     min-height: 60vh; 
 } */
+
+.card-w {
+    width: 100%;       
+    max-width: 350px; 
+}
+
+.card-w .card-img-top {
+    height: 200px;
+    object-fit: cover;  
+}
