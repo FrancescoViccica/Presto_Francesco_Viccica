@@ -1,43 +1,55 @@
 <x-layout>
-<x-navbar/>
-
-<div class="container">
-    <div class="row justify-content-center align-items-center">
-        <div class="col-12 col-md-8">
-<form method="POST" action="">
-    @csrf
-  
-    <div class="mb-3">
-        <label for="registerEmail" class="form-label">Indirizzo email</label>
-    <input type="email" class="form-control" id="registerEmail" name="email">
-  </div>
-
-    <div class="mb-3">
-        <label for="registerName" class="form-label">Nome utente</label>
-    <input type="name" class="form-control" id="registerName" name="name">
-  </div>
-  
-  <div class="mb-3">
-    <label for="password" class="form-label">Password</label>
-    <input type="password" class="form-control" id="password" name="password">
-  </div>
-
-  <div class="mb-3">
-    <label for="password_confirmation" class="form-label">Password</label>
-    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
-  </div>
-  
-  <button type="submit" class="btn btn-primary">Registrati</button>
-
-</form>
+    
+    <!-- Rimosso heightCustom per avvicinare il titolo al form -->
+    <div class="container-fluid mt-5">
+        <div class="row justify-content-center text-center">
+            <div class="col-12">
+                <h1 class="display-4 mb-0">Registrati</h1>
+            </div>
         </div>
     </div>
-</div>
+    
+    <div class="container bg-secondary-subtle rounded-4 p-5 mt-3">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-9">
+                <form action="{{ route('register') }}" method="POST">
+                    @csrf
 
+                    <!-- Campo Nome utente -->
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nome utente</label>
+                        <input name="name" type="text" class="form-control" id="name" required>
+                    </div>
+                    
+                    <!-- Campo Email -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email utente</label>
+                        <input name="email" type="email" class="form-control" id="email" required>
+                    </div>
 
+                    <!-- Campo Password -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input name="password" type="password" class="form-control" id="password" required>
+                    </div>
 
+                    <!-- Campo Conferma Password -->
+                    <div class="mb-3">
+                        <label for="password_confirmation" class="form-label">Conferma Password</label>
+                        <input name="password_confirmation" type="password" class="form-control" id="password_confirmation" required>
+                    </div>
 
-
-
-<x-footer/>
+                    <!-- Pulsanti di azione allineati -->
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <button type="submit" class="btn btn-primary">Registrati</button>
+                        <p class="mb-0">Sei già registrato? 
+                            <a class="btn btn-outline-primary ms-2" href="{{route('login')}}">Accedi</a>
+                        </p>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+    
 </x-layout>

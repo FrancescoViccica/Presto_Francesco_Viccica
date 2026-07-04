@@ -2,5 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\ArticleController;
 
+// Pagina principale del sito
 Route::get('/', [PublicController::class, 'homepage'])->name('homepage');
+
+Route::get('/create/article', [ArticleController::class, 'create'])->name('article.create')->middleware('auth');
