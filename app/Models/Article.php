@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Article extends Model
 {
+    use Searchable;
 
-public function category()
+    public function category()
     {
         return $this->belongsTo(Category::class);
     }
@@ -25,6 +27,16 @@ public function category()
 
     public static function toBerevisionedCount(){
         return Article::whereNull('is_accepted')->count();
+    }
+
+    public function toSearchableArray()
+    {
+        return [
+            'id' => (int) $this->id,
+            'title' => $this->title,
+            'description' => $this->description,
+            'category' => $this->category 
+        ];
     }
     
     protected $fillable = [
