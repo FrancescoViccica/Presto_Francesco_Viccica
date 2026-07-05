@@ -9,7 +9,7 @@ class PublicController extends Controller
 {
             public function homepage(){
         // Recupera gli ultimi 6 articoli ordinati dal più recente
-        $articles = Article::take(6)->orderBy('created_at', 'desc')->get();
+        $articles = Article::where('is_accepted', true)->orderBy('created_at', 'desc')->take(6)->get();
 
         return view('welcome', compact('articles'));
     }

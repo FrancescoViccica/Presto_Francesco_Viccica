@@ -1,6 +1,27 @@
 <x-layout>
 
+    
+    <!-- ⬇️ BLOCCO MESSAGGIO: Mostra le conferme di accettazione/rifiuto articoli ⬇️ -->
+    @if (session()->has('message'))
+    <div class="row justify-content-center mb-4">
+        <div class="col-12 col-md-6">
+            <div class="alert alert-success text-center shadow rounded fw-bold">
+                {{ session('message') }}
+            </div>
+        </div>
+    @endif
+
+
 <div class="container-fluid text-center bg-body-tertiary">
+      @if (session()->has('errorMessage'))
+    <div class="row justify-content-center pt-4">
+        <div class="col-12 col-md-6">
+            <div class="alert alert-danger text-center shadow rounded fw-bold">
+                {{ session('errorMessage') }}
+            </div>
+        </div>
+    </div>
+    @endif
     <div class="row vh-100 justify-content-center align-items-center">
         <div class="col-12">
             <h1 class="displa-4">Presto.it</h1>

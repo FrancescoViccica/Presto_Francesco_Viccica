@@ -66,6 +66,23 @@
   </div>
   <!-- Grid container -->
 
+
+  <section class="mb-4">
+          @auth
+            <!-- Il pulsante punta alla rotta del tuo RevisorController -->
+            <a href="{{ route('become.revisor') }}" class="btn btn-primary shadow-sm fw-bold px-4 py-2">
+                💼 Lavora con noi / Diventa Revisore
+            </a>
+          @else
+            <!-- Messaggio se l'utente non è loggato -->
+            <p class="text-muted small">
+                Vuoi aiutarci a controllare gli annunci? 
+                <a href="{{ route('login') }}" class="text-primary text-decoration-none fw-bold">Effettua il login</a> 
+                per candidarti come revisore.
+            </p>
+          @endauth
+        </section>
+
   <!-- Copyright -->
   <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
     © 2020 Copyright:

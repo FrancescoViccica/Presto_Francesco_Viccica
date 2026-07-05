@@ -16,6 +16,16 @@ public function category()
     {
         return $this->belongsTo(User::class);
     }
+
+    public function setAccepted($value){
+        $this->is_accepted = $value;
+        $this->save();
+        return true;
+    }
+
+    public static function toBerevisionedCount(){
+        return Article::whereNull('is_accepted')->count();
+    }
     
     protected $fillable = [
         'title',

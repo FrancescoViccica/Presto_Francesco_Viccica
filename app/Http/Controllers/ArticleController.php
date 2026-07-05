@@ -14,18 +14,26 @@ class ArticleController extends Controller
     }
 
     public function index(){
-        $articles= Article::orderBy('created_at', 'desc')->paginate(6);
+        $articles= Article::where('is_accepted', true)->orderBy('created_at', 'desc')->paginate(10);
         return view('article.index', compact('articles'));
     }
 
-    public function show(Article $article){
-        return view('article.show', compact('article'));
+   public function show(Article $article)
+{
+    // Se l'articolo NON è stato accettato, impedisci la visualizzazione al pubblico
+    
+    if (!$article->is_accepted) {
+        abort(404); 
     }
+
+    return view('article.show', compact('article'));
+}
+
 
    public function byCategory(Category $category)
 {
    
-    $articles = $category->articles()->orderBy('created_at', 'desc')->get();
+    $articles = $category->articles()->where('is_accepted', true)->orderBy('created_at', 'desc')->get();
 
     return view('article.byCategory', compact('articles', 'category'));
 }
