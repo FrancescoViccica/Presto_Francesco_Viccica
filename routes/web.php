@@ -10,6 +10,8 @@ Route::get('/', [PublicController::class, 'homepage'])->name('homepage');
 
 Route::get('search/article', [PublicController::class, 'searchArticles'])->name('search.article');
 
+Route::post('/lingua/{lang}', [PublicController::class, 'setLanguage'])->name('setLocale');
+
 Route::get('/article/create', [ArticleController::class, 'create'])->name('article.create')->middleware('auth');
 
 Route::get('/article/index', [ArticleController::class, 'index'])->name('article.index')->middleware('auth');

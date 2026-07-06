@@ -12,7 +12,7 @@
                 @endif
                 
                 <form class="shadow p-5 rounded-5 bg-secondary-subtle" wire:submit="store">
-                    
+                    @csrf
                     <!-- Campo Titolo -->
                     <div class="mb-3">
                         <label for="title" class="form-label">Titolo</label>
