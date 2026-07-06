@@ -1,5 +1,5 @@
 <div class="card mx-auto shadow text-center card-w h-100 d-flex flex-column justify-content-between">
-  <img src="{{ $article->images->isNotEmpty() ? asset('storage/' . $article->images->first()->path) : '/media/default.png' }}" class="card-img-top" alt="Immagine articolo {{ $article->title }}">
+  <img src="{{ $article->images->isNotEmpty() ? $article->images->first()->getUrl(300, 300) : '/media/default.png' }}" class="card-img-top" alt="Immagine articolo {{ $article->title }}">
   
   <div class="card-body d-flex flex-column justify-content-between p-3">
     <div>

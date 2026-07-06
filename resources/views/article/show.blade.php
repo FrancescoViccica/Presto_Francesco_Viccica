@@ -15,7 +15,7 @@
                     <div class="carousel-inner">
                         @foreach ($article->images as $key=> $image )
                         <div class="carousel-item @if ($loop->first) active @endif">
-                            <img src="{{ Storage::url($image->path) }}" class="d-block rounded shadow w-100" alt="Immagine {{ $key + 1 }} articolo {{ $article->title }}">
+                            <img src="{{ $image->getUrl(300, 300) }}" class="d-block rounded shadow w-100" alt="Immagine {{ $key + 1 }} articolo {{ $article->title }}">
                         </div>
                         @endforeach
                     </div>

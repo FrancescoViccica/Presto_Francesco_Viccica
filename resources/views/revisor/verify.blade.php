@@ -14,9 +14,8 @@
             <div class="row justify-content-center">
                 @if ($article_to_check->images->count())
                     @foreach ($article_to_check->images as $key => $image )
-                        <!-- AGGIUNTO mb-4: Evita che le righe di immagini si incollino tra loro se sono molte -->
                         <div class="col-6 col-md-4 mb-4 text-center">
-                            <img src="{{ Storage::url($image->path) }}" alt="Immagine {{ $key + 1 }} dell'annuncio {{ $article_to_check->title }}" class="img-fluid rounded shadow" style="width: 100%; height: 200px; object-fit: cover;">
+                            <img src="{{ $image->getUrl(300, 300) }}" alt="Immagine {{ $key + 1 }} dell'annuncio {{ $article_to_check->title }}" class="img-fluid rounded shadow" style="width: 100%;">
                         </div>
                     @endforeach
                 @else

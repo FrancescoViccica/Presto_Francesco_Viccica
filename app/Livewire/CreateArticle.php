@@ -5,86 +5,131 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Article;
 use App\Models\Category;
+use App\Jobs\ResizeImage;
 use Livewire\WithFileUploads;
 
 class CreateArticle extends Component
 {
     use WithFileUploads;
 
-#[Validate('required', message: 'Il titolo è obbligatorio')]
-public $title;
+    #[Validate('required', message: 'Il titolo è obbligatorio')]
+    public $title;
 
-#[Validate('required', message: 'La descrizione è obbligatoria')]
-public $description;
+    #[Validate('required', message: 'La descrizione è obbligatoria')]
+    public $description;
 
-#[Validate('required', message: 'Il prezzo è obbligatorio')]
-#[Validate('numeric', message: 'Deve essere un numero')]
-public $price;
+    #[Validate('required', message: 'Il prezzo è obbligatorio')]
+    #[Validate('numeric', message: 'Deve essere un numero')]
+    public $price;
 
-#[Validate('required')]
-public $category='';
-public $article;
+    #[Validate('required')]
+    public $category = '';
+    
+    public $article;
 
-public $images = [];
-public $temporary_images = [];
+    public $images = [];
+    public $temporary_images = [];
 
-
-public function store()
+    // Metodo mount per caricare i dati in caso di modifica
+    public function mount(Article $article = null)
     {
-        // validazione dei dati inseriti
+        if ($article && $article->exists) {
+            $this->article = $article;
+            $this->title = $article->title;
+            $this->description = $article->description;
+            $this->price = $article->price;
+            $this->category = $article->category_id;
+        }
+    }
+
+    public function store()
+    {
         $this->validate();
 
-        //  Salva l'articolo direttamente nel database tramite il Modello
-       $this->article = Article::create([
-            'title' => $this->title,
-            'description' => $this->description,
-            'price' => $this->price,
-            'category_id' => $this->category,
-            'user_id' => Auth::id(), 
-        ]);
-
-        if(count($this->images) > 0){
-            foreach($this->images as $image){
-                $this->article->images()->create(['path'=>$image->store('image', 'public')]); 
-            }
+        // Se l'articolo esiste esegue la modifica, altrimenti lo crea
+        if ($this->article && $this->article->exists) {
+            $this->article->update([
+                'title' => $this->title,
+                'description' => $this->description,
+                'price' => $this->price,
+                'category_id' => $this->category,
+                'user_id' => Auth::id(), 
+            ]);
+            $flashMessage = 'Articolo modificato con successo!';
+        } else {
+            $this->article = Article::create([
+                'title' => $this->title,
+                'description' => $this->description,
+                'price' => $this->price,
+                'category_id' => $this->category,
+                'user_id' => Auth::id(), 
+            ]);
+            $flashMessage = 'Articolo creato con successo!';
         }
 
-        // messaggio di successo alla vista
-        session()->flash('message', 'Articolo creato con successo!');
+        if (count($this->images) > 0) {
+            // Se siamo in modifica, eliminiamo le vecchie immagini prima di inserire le nuove
+            if ($this->article->wasRecentlyCreated === false) {
+                foreach ($this->article->images as $oldImage) {
+                    Storage::disk('public')->delete($oldImage->path);
+                    
+                    // Elimina anche il file fisicamente croppato se presente
+                    $oldCrop = dirname($oldImage->path) . '/crop_300x300_' . basename($oldImage->path);
+                    Storage::disk('public')->delete($oldCrop);
 
-        //  Svuota automaticamente tutti i campi del form
+                    $oldImage->delete();
+                }
+            }
+
+            foreach ($this->images as $image) {
+                $newFileName = "articles/{$this->article->id}";
+                
+                
+                $newImage = $this->article->images()->create([
+                    'path' => $image->store($newFileName, 'public')
+                ]);
+                
+                // Lancia il job asincrono usando il dispatch classico (dall'immagine precedente)
+                
+                dispatch(new ResizeImage($newImage->path, 300, 300));
+            }
+            File::deleteDirectory(storage_path('app/livewire-tmp'));
+        }
+
+        session()->flash('message', $flashMessage);
+
+        if ($this->article->wasRecentlyCreated === false) {
+            return redirect()->route('article.index');
+        }
+
         $this->reset(['title', 'description', 'price', 'category', 'images', 'temporary_images']);
     }
 
-    public function updatedTemporaryImages(){
-        if($this->validate([
+    public function updatedTemporaryImages() {
+        if ($this->validate([
             'temporary_images.*' => 'Image|max:1024',
             'temporary_images' => 'max:6'
-        ])){
-            foreach($this->temporary_images as $image){
+        ])) {
+            foreach ($this->temporary_images as $image) {
                 $this->images[] = $image;
             }
         }
     }
 
-    public function removeImages($key){
-
-       if(in_array($key, array_keys($this->images))){
-        unset($this->images[$key]);
-       }
-
+    public function removeImages($key) {
+        if (in_array($key, array_keys($this->images))) {
+            unset($this->images[$key]);
+        }
     }
 
-
-
-
-public function render()
-{
-    // Recuperiamo tutte le categorie dal database e le passiamo alla vista
-    return view('livewire.create-article', [
-        'categories' => Category::all()
-    ]);
-}
+    public function render()
+    {
+        return view('livewire.create-article', [
+            'categories' => Category::all()
+        ]);
+    }
 }
