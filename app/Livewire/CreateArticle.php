@@ -7,9 +7,12 @@ use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Article;
 use App\Models\Category;
+use Livewire\WithFileUploads;
 
 class CreateArticle extends Component
 {
+    use WithFileUploads;
+
 #[Validate('required', message: 'Il titolo è obbligatorio')]
 public $title;
 
@@ -24,22 +27,9 @@ public $price;
 public $category='';
 public $article;
 
-// Logica per salvare l'articolo nel database o eseguire altre azioni
-// public function store()
-// {
-// $this->validate();
+public $images = [];
+public $temporary_images = [];
 
-// $this->article = [
-// 'title' => $this->title,
-// 'description' => $this->description,
-// 'price' => $this->price,
-// 'category_id' => $this->category,
-// 'user_id' => Auth::id(), 
-// ];
-
-// session()->flash('message', 'Articolo creato con successo!');
-
-// }
 
 public function store()
     {
@@ -47,7 +37,7 @@ public function store()
         $this->validate();
 
         //  Salva l'articolo direttamente nel database tramite il Modello
-        Article::create([
+       $this->article = Article::create([
             'title' => $this->title,
             'description' => $this->description,
             'price' => $this->price,
@@ -55,23 +45,40 @@ public function store()
             'user_id' => Auth::id(), 
         ]);
 
+        if(count($this->images) > 0){
+            foreach($this->images as $image){
+                $this->article->images()->create(['path'=>$image->store('image', 'public')]); 
+            }
+        }
+
         // messaggio di successo alla vista
         session()->flash('message', 'Articolo creato con successo!');
 
         //  Svuota automaticamente tutti i campi del form
-        $this->reset(['title', 'description', 'price', 'category']);
+        $this->reset(['title', 'description', 'price', 'category', 'images', 'temporary_images']);
+    }
+
+    public function updatedTemporaryImages(){
+        if($this->validate([
+            'temporary_images.*' => 'Image|max:1024',
+            'temporary_images' => 'max:6'
+        ])){
+            foreach($this->temporary_images as $image){
+                $this->images[] = $image;
+            }
+        }
+    }
+
+    public function removeImages($key){
+
+       if(in_array($key, array_keys($this->images))){
+        unset($this->images[$key]);
+       }
+
     }
 
 
-// protected function cleanForm()
-// {
-// $this->title = '';
-// $this->description = '';
-// $this->price = '';
-// $this->category = '';
 
-// $this->cleanForm();
-// }
 
 public function render()
 {

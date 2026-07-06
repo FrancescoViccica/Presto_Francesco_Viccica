@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Image;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
 
 class Article extends Model
@@ -35,8 +37,13 @@ class Article extends Model
             'id' => (int) $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'category' => $this->category 
+            // CORRETTO: Estrae solo il testo per evitare il crash di TNTSearch
+            'category' => $this->category ? $this->category->name : null, 
         ];
+    }
+
+    public function images(): HasMany{
+        return $this->hasMany(Image::class);
     }
     
     protected $fillable = [

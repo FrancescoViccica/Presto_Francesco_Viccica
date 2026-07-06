@@ -5,9 +5,20 @@
 .card-w {
     width: 100%;       
     max-width: 350px; 
+    margin-left: auto;  
+    margin-right: auto; 
 }
+
 
 .card-w .card-img-top {
     height: 200px;
     object-fit: cover;  
+}
+
+.img-preview{
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 120px;
+    width: 120px;
 }
