@@ -1,5 +1,11 @@
 <div class="card mx-auto shadow text-center card-w h-100 d-flex flex-column justify-content-between">
-  <img src="{{ $article->images->isNotEmpty() ? $article->images->first()->getUrl(300, 300) : '/media/default.png' }}" class="card-img-top" alt="Immagine articolo {{ $article->title }}">
+  <!-- 👇 INIZIO MODIFICA: Contenitore e immagine con regole forzate per il centramento 👇 -->
+  <div style="width: 100%; height: 200px; overflow: hidden; position: relative;">
+      <img src="{{ $article->images->isNotEmpty() ? $article->images->first()->getUrl(300, 300) : '/media/default.png' }}" 
+           class="img-fluid" 
+           alt="Immagine articolo {{ $article->title }}"
+           style="width: 100%; height: 100%; object-fit: cover !important; object-position: center !important; display: block;">
+  </div>
   
   <div class="card-body d-flex flex-column justify-content-between p-3">
     <div>
