@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Override;
 
 class Image extends Model
 {
@@ -34,6 +35,14 @@ class Image extends Model
     public function getUrl($w = null, $h = null)
     {
         return self::getUrlByFilePath($this->path, $w, $h);
+    }
+
+    #[Override]
+    protected function casts()
+    {
+        return [
+            'labels' => 'array',
+        ];
     }
 
 }

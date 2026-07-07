@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Jobs\GoogleVisionLabelImage;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Article;
 use App\Models\Category;
 use App\Jobs\ResizeImage;
+use App\Jobs\GoogleVisionSafeSearch;
 use Livewire\WithFileUploads;
 
 class CreateArticle extends Component
@@ -93,11 +95,12 @@ class CreateArticle extends Component
                     'path' => $image->store($newFileName, 'public')
                 ]);
                 
-                // Lancia il job asincrono usando il dispatch classico (dall'immagine precedente)
-                
-                dispatch(new ResizeImage($newImage->path, 300, 300));
+                // 👇 NUOVA LOGICA: Lancio di entrambi i Job in coda in sicurezza dopo l'invio della risposta
+                ResizeImage::dispatch($newImage->path, 300, 300);
+                GoogleVisionSafeSearch::dispatch($newImage->id);
+                GoogleVisionLabelImage::dispatch($newImage->id);
             }
-            File::deleteDirectory(storage_path('app/livewire-tmp'));
+            // File::deleteDirectory(storage_path('app/livewire-tmp'));
         }
 
         session()->flash('message', $flashMessage);

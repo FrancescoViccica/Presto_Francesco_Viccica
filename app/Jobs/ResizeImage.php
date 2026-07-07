@@ -67,9 +67,9 @@ class ResizeImage implements ShouldQueue
                 ->save($destPath); // Salva il file nella nuova destinazione croppata
 
             // (Opzionale ma consigliato) Elimina il file originale non croppato per non intasare il server
-            if (file_exists($destPath) && $srcPath !== $destPath) {
-                unlink($srcPath);
-            }
+            // if (file_exists($destPath) && $srcPath !== $destPath) {
+            //     unlink($srcPath);
+            // }
         }
     }
 }
