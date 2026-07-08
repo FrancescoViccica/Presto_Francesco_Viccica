@@ -45,7 +45,7 @@ return;
 $srcPath = storage_path('app/public/' . $imageModel->path);
 
 if (!file_exists($srcPath)) {
-logger("RemoveFaces: immagine non trovata -> {$srcPath}");
+// logger("RemoveFaces: immagine non trovata -> {$srcPath}");
 return;
 }
 
@@ -81,7 +81,7 @@ $response = $responses[0];
 $faces = $response->getFaceAnnotations();
 
 // LOG temporaneo
-logger('Numero volti trovati: ' . count($faces));
+// logger('Numero volti trovati: ' . count($faces));
 
 if (count($faces) === 0) {
 $client->close();
@@ -91,7 +91,7 @@ return;
 $censuraPath = base_path('resources/img/censura.png');
 
 if (!file_exists($censuraPath)) {
-logger("RemoveFaces: immagine censura non trovata -> {$censuraPath}");
+// logger("RemoveFaces: immagine censura non trovata -> {$censuraPath}");
 $client->close();
 return;
 }
@@ -113,10 +113,10 @@ $width = $vertices[1]->getX() - $vertices[0]->getX();
 $height = $vertices[3]->getY() - $vertices[0]->getY();
 
 
-logger('X: ' . $x);
-logger('Y: ' . $y);
-logger('Width: ' . $width);
-logger('Height: ' . $height);
+// logger('X: ' . $x);
+// logger('Y: ' . $y);
+// logger('Width: ' . $width);
+// logger('Height: ' . $height);
 
 $image->watermark(
 $censuraPath,
@@ -149,7 +149,7 @@ if (file_exists($cropPath)) {
         )
         ->save($cropPath); // Salva la miniatura definitiva con censura + logo insieme
 
-    logger("RemoveFaces: Crop rigenerato con successo con censura e watermark.");
+    // logger("RemoveFaces: Crop rigenerato con successo con censura e watermark.");
 }
 // 👆 FINE DEL BLOCCO MODIFICATO
 

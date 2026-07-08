@@ -23,13 +23,14 @@
     </div>
     @endif
 
-    <div class="row vh-100 justify-content-center align-items-center">
+    <div class="row vh-100 justify-content-center align-items-center homepage">
         <div class="col-12">
-            
-            <h1 class="display-4">Presto.it</h1>
+            <img src="/media/logo.png" alt="Logo Presto.it" class="img-fluid mb-4 shadow-sm rounded-4" style="max-width: 180px; height: auto;">
+            <h1 class="display-4">Presto</h1>
+            <h3>Tutto a portata di mano</h3>
             <div class="my-5">
                 @auth
-                <a class="btn btn-outline-primary" href="{{ route('article.create') }}">{{ __('ui.Crea_annuncio') }}</a>
+                <a class="btn btn-primary" href="{{ route('article.create') }}">{{ __('ui.Crea_annuncio') }}</a>
                 @endauth
             </div>
         </div>

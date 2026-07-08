@@ -36,7 +36,7 @@
           </ul>
         </li>
       </ul>
-
+      
       <!-- Sezione destra: unisce la Barra di Ricerca e l'Autenticazione Utente -->
       <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center ms-auto">
         
@@ -44,19 +44,32 @@
         <form action="{{route('search.article')}}" method="GET" role="search" class="d-flex my-2 my-lg-0 me-lg-3" style="min-width: 250px;">
           <div class="input-group w-100">
             <input 
-              type="search" 
-              name="query" 
-              class="form-control" 
-              placeholder="{{ __('ui.searchPlaceholder') }}" 
-              aria-label="search"
-              value="{{ request()->get('query') }}"
+            type="search" 
+            name="query" 
+            class="form-control" 
+            placeholder="{{ __('ui.searchPlaceholder') }}" 
+            aria-label="search"
+            value="{{ request()->get('query') }}"
             >
             <button type="submit" class="input-group-text btn btn-outline-success" id="basic-addon2" >
               {{ __('ui.searchButton') }}
             </button>
           </div>
         </form>
-
+        
+        <!-- ICONA DEL CARRELLO  -->
+        <a href="#" class="btn border-0 ms-2 position-relative d-flex align-items-center" title="Carrello">
+          <i class="bi bi-cart3 fs-5"></i>
+          
+          <!-- Il badge compare solo se il conteggio è maggiore di 0 -->
+          @if(session('cart') && count(session('cart')) > 0)
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            {{ count(session('cart')) }}
+            <span class="visually-hidden">articoli nel carrello</span>
+          </span>
+          @endif
+        </a>
+        
         <!-- Link Accedi / Registrati / Ciao Utente -->
         <ul class="navbar-nav mb-2 mb-lg-0 me-lg-3" style="white-space: nowrap;">
           @guest
@@ -96,8 +109,8 @@
           </li>
           @endauth
         </ul>
-
-         <div class="nav-item dropdown my-2 my-lg-0">
+        
+        <div class="nav-item dropdown my-2 my-lg-0">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             {{ __('ui.language') }}
           </a>

@@ -43,8 +43,17 @@
                     <h4 class="fw-bold">Prezzo: € {{ $article->price }}</h4>
                     <h5>Descrizione</h5>
                     <p>{{ $article->description }}</p>
+                    
+                    <!-- BOTTONE AGGIUNGI AL CARRELLO -->
+                    <div class="d-grid gap-2 mt-4">
+                        <button class="btn btn-outline-success btn-lg d-flex align-items-center justify-content-center fw-bold" type="button">
+                            <i class="bi bi-cart-plus me-2 fs-5"></i>
+                            Aggiungi al carrello
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
+</div> 
 </x-layout>

@@ -1,6 +1,11 @@
-/* .height-custom{
-    min-height: 60vh; 
-} */
+.homepage{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.65)), url('../../public/media/homepage.png'); 
+    background-size: cover;          
+    background-position: center;     
+    background-repeat: no-repeat;    
+    min-height: 450px;               
+}
+
 
 .card-w {
     width: 100%;       
