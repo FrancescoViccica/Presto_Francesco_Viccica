@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use Illuminate\Support\Facades\Bus;
+use App\Jobs\RemoveFaces;
 use App\Jobs\GoogleVisionLabelImage;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
@@ -95,12 +97,16 @@ class CreateArticle extends Component
                     'path' => $image->store($newFileName, 'public')
                 ]);
                 
-                // 👇 NUOVA LOGICA: Lancio di entrambi i Job in coda in sicurezza dopo l'invio della risposta
-                ResizeImage::dispatch($newImage->path, 300, 300);
-                GoogleVisionSafeSearch::dispatch($newImage->id);
-                GoogleVisionLabelImage::dispatch($newImage->id);
+                Bus::chain([
+                  new ResizeImage($newImage->path, 300, 300),
+                  new GoogleVisionSafeSearch($newImage->id),
+                  new GoogleVisionLabelImage($newImage->id),
+                  new RemoveFaces($newImage->id),
+                  ])->dispatch();
             }
-            // File::deleteDirectory(storage_path('app/livewire-tmp'));
+            
+            // Svuota la cartella temporanea (Scommentato come da pag. 102 della guida per non intasare lo storage)
+            File::deleteDirectory(storage_path('app/livewire-tmp'));
         }
 
         session()->flash('message', $flashMessage);
@@ -123,11 +129,20 @@ class CreateArticle extends Component
         }
     }
 
-    public function removeImages($key) {
-        if (in_array($key, array_keys($this->images))) {
+        public function removeImages($key) {
+        // 1. Elimina dalla lista delle immagini confermate e riordina
+        if (isset($this->images[$key])) {
             unset($this->images[$key]);
+            $this->images = array_values($this->images);
+        }
+
+        // 2. Elimina dalla lista temporanea (così sparisce l'anteprima a schermo) e riordina
+        if (isset($this->temporary_images[$key])) {
+            unset($this->temporary_images[$key]);
+            $this->temporary_images = array_values($this->temporary_images);
         }
     }
+
 
     public function render()
     {

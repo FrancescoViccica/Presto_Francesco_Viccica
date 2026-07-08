@@ -14,8 +14,14 @@
                 <div id="carouselExample" class="carousel slide">
                     <div class="carousel-inner">
                         @foreach ($article->images as $key=> $image )
-                        <div class="carousel-item @if ($loop->first) active @endif">
-                            <img src="{{ $image->getUrl(300, 300) }}" class="d-block rounded shadow w-100" alt="Immagine {{ $key + 1 }} articolo {{ $article->title }}">
+                         <!-- MODIFICATO: Contenitore con altezza fissa e centratura perfetta -->
+                        <div class="carousel-item @if ($loop->first) active @endif" style="height: 400px;">
+                            <div class="d-flex align-items-center justify-content-center h-100 w-100">
+                                <img src="{{ Storage::url($image->path) }}" 
+                                     class="img-fluid d-block mx-auto" 
+                                     alt="Immagine {{ $key + 1 }} articolo {{ $article->title }}"
+                                     style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                            </div>
                         </div>
                         @endforeach
                     </div>

@@ -55,7 +55,7 @@ class ResizeImage implements ShouldQueue
             // Inizializziamo Spatie Image con il driver GD
             Image::useImageDriver(ImageDriver::Gd)
                 ->load($srcPath)
-                ->crop($w, $h, CropPosition::Center) // Taglia l'immagine partendo dal centro
+                ->fit(\Spatie\Image\Enums\Fit::Contain, $w, $h) // 🌟 Ridimensiona in scala senza tagliare nulla!
                 ->watermark(
                     base_path('resources/img/watermark.png'), // Percorso del logo/watermark
                     paddingX: 5,

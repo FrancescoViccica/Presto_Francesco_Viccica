@@ -22,14 +22,14 @@
                         @enderror
                     </div>
                     
-                    @if (!empty($images))
+                    @if (!empty($temporary_images))
                     <div class="row mb-4">
                         <div class="col-12">
                             <p class="fw-bold mb-2">Anteprima foto caricate:</p>
                             
                             <div class="d-flex flex-wrap justify-content-center align-items-center gap-3 border border-4 border-success rounded shadow p-3 bg-white w-100">
-                                @foreach ($images as $key => $image)
-                                <div class="d-flex flex-column align-items-center text-center p-2 border rounded shadow-sm bg-light" style="min-width: 140px;">
+                                @foreach ($temporary_images as $key => $image)
+                                <div class="d-flex flex-column align-items-center text-center p-2 border rounded shadow-sm bg-light" style="min-width: 140px;" wire:key="image-preview-{{ $key }}">
                                     <div class="img-preview shadow rounded mb-2" style="background-image: url({{ $image->temporaryUrl() }});"></div>
                                     <button type="button" class="btn btn-danger btn-sm w-100 fw-bold" wire:click="removeImages({{ $key }})">X</button>
                                 </div>
