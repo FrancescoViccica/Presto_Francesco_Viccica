@@ -19,18 +19,18 @@
                             
                             <div class="row g-0 h-100 align-items-start py-3">
                                 
-                                                                <!-- 1. Colonna Foto (Sinistra) -->
+                                 <!-- 1. Colonna Foto (Sinistra) -->
                                 <div class="col-md-4 px-2 text-center">
-                                    <!-- Contenitore flessibile con sfondo scuro ad altezza fissa per dare ordine -->
+                                    <!-- Contenitore con sfondo scuro per ospitare l'immagine ottimizzata -->
                                     <div class="bg-dark rounded p-1 d-flex align-items-center justify-content-center" style="height: 200px; overflow: hidden;">
-                                        <!-- Sostituito getUrl con Storage::url per caricare la foto originale senza i tagli del crop quadrato -->
-                                        <img src="{{ Storage::url($image->path) }}" 
-                                             class="img-fluid rounded shadow-sm" 
-                                             alt="Immagine {{ $key + 1 }} dell'annuncio {{ $article_to_check->title }}"
-                                             style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                                        <!-- Cambiato da Storage::url a getUrl per caricare il file leggero con watermark e censura inclusi -->
+                                        <img src="{{ $image->getUrl(300, 300) }}" 
+                                        class="img-fluid rounded shadow-sm" 
+                                        alt="Immagine {{ $key + 1 }} dell'annuncio {{ $article_to_check->title }}"
+                                        style="max-height: 100%; max-width: 100%; object-fit: contain;">
                                     </div>
                                 </div>
-
+                                
                                 
                                 
                                 

@@ -8,6 +8,9 @@ use Spatie\Image\Image;
 use Spatie\Image\Enums\ImageDriver;
 use Spatie\Image\Enums\CropPosition;
 use Spatie\Image\Enums\Unit;
+use Spatie\Image\Enums\Fit; // 🌟 AGGIUNTO: Importazione fondamentale per il ridimensionamento proporzionale
+use Spatie\Image\Enums\AlignPosition; // 🌟 AGGIUNTO: Importazione per decidere l'angolo del logo
+
 
 class ResizeImage implements ShouldQueue
 {
@@ -52,19 +55,21 @@ class ResizeImage implements ShouldQueue
         // Verifichiamo che il file originale esista per evitare che il Job vada in errore (crash)
         if (file_exists($srcPath)) {
             
-            // Inizializziamo Spatie Image con il driver GD
-            Image::useImageDriver(ImageDriver::Gd)
+            // Versione pulita senza vincoli di pixel per forzare la stampa nativa
+                       Image::useImageDriver(ImageDriver::Gd)
                 ->load($srcPath)
-                ->fit(\Spatie\Image\Enums\Fit::Contain, $w, $h) // 🌟 Ridimensiona in scala senza tagliare nulla!
+                ->fit(\Spatie\Image\Enums\Fit::Contain, $w, $h) 
                 ->watermark(
-                    base_path('resources/img/watermark.png'), // Percorso del logo/watermark
-                    paddingX: 5,
-                    paddingY: 5,
-                    width: 50,
-                    height: 50,
-                    paddingUnit: Unit::Percent
+                    base_path('resources/img/watermark.png'), 
+                    position: AlignPosition::BottomRight, // Nell'angolo in basso a destra
+                    paddingX: 10, // 10 pixel di distanza dal bordo
+                    paddingY: 10,
+                    width: 50,    // 🌟 FORZATO: 50 pixel di larghezza
+                    height: 50    // 🌟 FORZATO: 50 pixel di altezza
                 )
-                ->save($destPath); // Salva il file nella nuova destinazione croppata
+                ->save($destPath);
+
+
 
             // (Opzionale ma consigliato) Elimina il file originale non croppato per non intasare il server
             // if (file_exists($destPath) && $srcPath !== $destPath) {

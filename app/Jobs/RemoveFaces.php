@@ -135,15 +135,23 @@ $image->save($srcPath);
 // Recuperiamo il percorso fisico del file del crop 300x300 generato da ResizeImage
 $cropPath = dirname($srcPath) . '/crop_300x300_' . basename($srcPath);
 
-// Se il file del crop esiste, lo rigeneriamo partendo dall'originale appena censurato
+// Se il file del crop esiste, lo rigeneriamo immettendoci sia la censura sia il watermark
 if (file_exists($cropPath)) {
-SpatieImage::load($srcPath)
-->fit(\Spatie\Image\Enums\Fit::Contain, 300, 300) // 🌟 Ridimensiona in scala l'immagine censurata
-->save($cropPath);
+    SpatieImage::load($srcPath)
+        ->fit(\Spatie\Image\Enums\Fit::Contain, 300, 300) // Ridimensiona in scala l'immagine censurata
+        ->watermark(
+            base_path('resources/img/watermark.png'), 
+            position: AlignPosition::BottomRight, // Posizionato nell'angolo in basso a destra
+            paddingX: 10, // 10 pixel di distanza dal bordo
+            paddingY: 10,
+            width: 50,    // 50 pixel esatti di larghezza
+            height: 50    // 50 pixel esatti di altezza
+        )
+        ->save($cropPath); // Salva la miniatura definitiva con censura + logo insieme
 
-logger("RemoveFaces: Crop rigenerato con successo con la censura.");
+    logger("RemoveFaces: Crop rigenerato con successo con censura e watermark.");
 }
-// 👆 FINE DEL NUOVO BLOCCO
+// 👆 FINE DEL BLOCCO MODIFICATO
 
 $client->close();
 }
